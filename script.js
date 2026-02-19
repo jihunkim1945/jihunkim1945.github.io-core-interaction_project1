@@ -91,7 +91,7 @@ tv.addEventListener("click", () => {
   frame.classList.add("isEntering");
 
   setTimeout(() => {
-    window.location.href = "../menu_page/menu.html";
+    window.location.href = "./menu_page/menu.html";
   }, 420);
 });
 
