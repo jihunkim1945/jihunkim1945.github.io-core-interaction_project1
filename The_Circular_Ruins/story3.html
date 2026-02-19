@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>The Circular Ruins</title>
+  <link rel="stylesheet" href="./story3.css" />
+</head>
+<body>
+
+  <!-- SVG filters for mouse distortion -->
+  <svg id="filters" aria-hidden="true">
+    <filter id="dreamDisplace">
+      <feTurbulence id="turb" type="fractalNoise" baseFrequency="0.012 0.014" numOctaves="2" seed="2" />
+      <feDisplacementMap id="disp" in="SourceGraphic" scale="18" />
+    </filter>
+  </svg>
+
+  <div class="app">
+    <div class="bg">
+      <img id="bgImg" src="../assets/images/d1.jpeg" alt="">
+    </div>
+
+    <div class="noise"></div>
+    <div class="wipe" id="wipe"></div>
+
+
+    <!-- burn overlay -->
+    <div class="burn" id="burn"></div>
+
+    <!-- random hover area -->
+    <div class="hotspot" id="hotspot" aria-label="hidden area"></div>
+
+    <!-- card container -->
+    <div class="stage" id="stage" aria-hidden="true">
+      <div class="reader" id="reader"></div>
+    </div>
+
+    <!-- door to home -->
+    <a href="../home/index.html" class="wakeDoor" id="wakeDoor">
+      <img src="../assets/images/door.jpg" alt="wake up">
+    </a>
+  </div>
+<audio id="bgm" preload="auto" loop>
+  <source src="../assets/images/cicular.wav" type="audio/wav" />
+</audio>
+
+  <script src="./story3.js"></script>
+</body>
+</html>

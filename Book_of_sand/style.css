@@ -1,0 +1,120 @@
+ :root{ --bg:#003bff; --white:#fff; }
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:var(--bg);
+      overflow:hidden;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      color:var(--white);
+    }
+
+    /* fullscreen static overlay */
+    .staticOverlay{
+      pointer-events:none;
+      position:fixed; inset:0;
+      z-index:80;
+      opacity:0;
+      transition:opacity .12s ease;
+      background:center/cover no-repeat;
+      mix-blend-mode: screen;
+      filter: contrast(125%) saturate(140%);
+    }
+    .staticOverlay.on{opacity:.18}
+    .staticOverlay.blast{opacity:.85}
+
+    .shake{animation:shake .55s steps(2,end) 1;}
+    @keyframes shake{
+      0%{transform:translate(0,0)}
+      15%{transform:translate(-2px,1px)}
+      30%{transform:translate(2px,-1px)}
+      45%{transform:translate(-3px,2px)}
+      60%{transform:translate(3px,-2px)}
+      80%{transform:translate(-2px,1px)}
+      100%{transform:translate(0,0)}
+    }
+
+    /* text layer full screen */
+    #textLayer{
+      position:fixed;
+      inset:0;
+      z-index:10;
+    }
+
+    /* paragraphs: random, overlap ok */
+    .para{
+      position:absolute;
+      width: 50vw;             /* ✅ 화면 반 정도 */
+      max-width: 620px;
+      font-size: 18px;
+      line-height: 1.22;
+      opacity: .95;
+      cursor:pointer;
+      user-select:none;
+      text-shadow: 0 2px 0 rgba(0,0,0,.35);
+      mix-blend-mode: screen;
+    }
+
+    .line{ display:block; white-space:pre-wrap; }
+
+    /* sand layer bottom (full screen 기준) */
+    #sandLayer{
+      position:fixed;
+      left:0; right:0; bottom:0;
+      height: 14%;
+      z-index:20;
+      pointer-events:none;
+    }
+    .ch{ display:inline-block; will-change:transform; }
+
+    /* ✅ the ONLY TV (button) */
+    #tvButton{
+      position:fixed;
+      z-index:95;
+      cursor:pointer;
+      user-select:none;
+      filter: drop-shadow(0 10px 28px rgba(0,0,0,.25));
+    }
+    #tvButton img{
+      width: 64px; /* 더 작게: 52px */
+      height:auto;
+      display:block;
+    }
+    #tvButton:hover{
+      filter: drop-shadow(0 0 14px rgba(255,255,255,.22)) drop-shadow(0 10px 28px rgba(0,0,0,.25));
+    }
+
+    /* HUD 텍스트는 선택: 필요 없으면 지워도 됨 */
+    .hud{
+      position:fixed;
+      inset:0;
+      z-index:5;
+      pointer-events:none;
+      font-size:14px;
+      letter-spacing:.08em;
+      opacity:.85;
+      text-transform: uppercase;
+      text-shadow: 0 2px 0 rgba(0,0,0,.35);
+    }
+    .hud .tr{position:absolute; right:18px; top:14px; text-align:right;}
+    .hud .bl{position:absolute; left:18px; bottom:14px;}
+
+    @media (max-width:560px){
+      .para{font-size:16px; width: 78vw;}
+      #tvButton img{ width: 58px; }
+      .hud{font-size:12px}
+    }
+    .door{
+  position:fixed;
+  z-index:95;
+  cursor:pointer;
+  user-select:none;
+  filter: drop-shadow(0 10px 28px rgba(0,0,0,.25));
+}
+.door img{
+  width: 62px;   /* 더 줄이면 52px */
+  height:auto;
+  display:block;
+}
+.door:hover{
+  filter: drop-shadow(0 0 14px rgba(255,255,255,.22)) drop-shadow(0 10px 28px rgba(0,0,0,.25));
+}

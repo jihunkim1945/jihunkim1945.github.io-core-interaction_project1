@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Book of Sand — TV Layout</title>
+    <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+
+  <div class="hud">
+    <div class="tr">VCR TAPE<br>00:00:03</div>
+    <div class="bl">VOLUME<br>|||||||||||--</div>
+  </div>
+
+  <div id="textLayer"></div>
+  <div id="sandLayer"></div>
+
+  <!-- ✅ only TV -->
+  <div id="tvButton" title="click = reload / double click = home">
+    <img id="tvBtnImg" alt="tv button">
+  </div>
+<div id="door" class="door" title="go home">
+  <img src="../assets/images/door.jpg" alt="door">
+</div>
+<audio id="bgm" preload="auto" loop>
+  <source src="../assets/images/bookofsand.wav" type="audio/wav" />
+</audio>
+
+  <div class="staticOverlay" id="staticOverlay"></div>
+  <script src="./script.js"></script>
+</body>
+</html>

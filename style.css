@@ -1,0 +1,251 @@
+@font-face{
+  font-family: "Whyte";
+  src: url("../assets/fonts/ABCWhyteMonoInktrapVariable-Trial.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root{
+  --fg: #f2f2f2;
+  --line: rgba(255,255,255,.20);
+  --bg: #000;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--fg);
+  overflow-x:hidden;
+  font-family:"Whyte", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* full screen background */
+.bg{
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  background: url("../assets/images/Dark-room.jpeg") center/cover no-repeat;
+  filter: grayscale(100%) contrast(120%) brightness(78%);
+}
+
+/* marquee */
+.marquee{
+  position:fixed;
+  left:0; right:0;
+  height:40px;
+  display:flex;
+  align-items:center;
+  overflow:hidden;
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  background:#000;
+  z-index:10;
+
+  font-size:12px;
+  letter-spacing:.06em;
+  text-transform:lowercase;
+  user-select:none;
+}
+.marquee--top{ top:0; }
+.marquee--bottom{ bottom:0; }
+
+.marquee__track{
+  display:flex;
+  white-space:nowrap;
+  will-change:transform;
+}
+.marquee__track > div{
+  display:flex;
+  gap:32px;
+  padding-left:32px;
+}
+
+@keyframes moveLeft { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+@keyframes moveRight{ from{transform:translateX(-50%)} to{transform:translateX(0)} }
+
+.marquee--top .marquee__track{ animation: moveLeft 14s linear infinite; }
+.marquee--bottom .marquee__track{ animation: moveRight 14s linear infinite; }
+
+/* layout */
+.stage{
+  min-height:100vh;
+  padding:40px 0;
+  display:grid;
+  place-items:center;
+}
+
+.frame{
+  width:min(1120px, 92vw);
+  aspect-ratio: 16 / 9;
+  border:1px solid var(--line);
+  border-radius: 14px;
+  position:relative;
+  overflow:hidden;
+  background: transparent;
+}
+
+/* hud text */
+.hud{
+  position:absolute;
+  font-size:12px;
+  letter-spacing:.06em;
+  opacity:.75;
+}
+.hud--tl{ top:14px; left:16px; }
+.hud--br{ bottom:14px; right:16px; text-align:right; }
+
+.hud__sub{ opacity:.9; }
+
+/* title + subtle glow */
+.title{
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
+  margin:0;
+
+  font-size: clamp(46px, 7vw, 96px);
+  font-weight: 220;
+  font-variation-settings: "wght" 220;
+  letter-spacing: -0.02em;
+  line-height:1;
+
+  /* subtle glow */
+  text-shadow:
+    0 0 6px rgba(255,255,255,.35),
+    0 0 18px rgba(255,255,255,.18);
+
+  /* for ghosts layering */
+  z-index:2;
+  isolation:isolate;
+}
+
+/* ghosts (less intense) */
+.titleGhost{
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
+
+  font-size: inherit;
+  font-weight: 200;
+  font-variation-settings: "wght" 200;
+  letter-spacing: inherit;
+  line-height: inherit;
+
+  opacity:0;
+  transform: translate(var(--x), var(--y));
+  animation: ghostLife var(--dur, 900ms) ease-out forwards;
+
+  mix-blend-mode: normal;
+  
+  pointer-events:none;
+}
+
+@keyframes ghostLife{
+  0%   { opacity:0; }
+  18%  { opacity:.55; }
+  60%  { opacity:.25; transform: translate(calc(var(--x)*.35), calc(var(--y)*.35)); }
+  100% { opacity:0;  transform: translate(calc(var(--x)*.9), calc(var(--y)*.9)); }
+}
+
+/* center caption */
+.caption{
+  position:absolute;
+  left:0; right:0;
+  bottom:18px;
+  text-align:center;
+  font-size:12px;
+  letter-spacing:.02em;
+  opacity:.55;
+}
+
+/* tv hotspot */
+.tv{
+  position:absolute;
+  right: -5%;
+  top: 7%;
+  width: 18%;
+  aspect-ratio:1/1;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.22);
+  background: transparent;
+  cursor:pointer;
+}
+.tv:hover{
+  border-color: rgba(255,255,255,.45);
+}
+/* ===== SUCTION (NO SPIN) ===== */
+.frame{ --sx: 78%; --sy: 38%; } /* fallback */
+
+.bg{
+  transition: transform .35s ease, filter .35s ease;
+  transform-origin: var(--sx) var(--sy);
+  will-change: transform, filter;
+}
+
+/* hover: 배경이 TV쪽으로 당겨지는 느낌 */
+body.isSucking .bg{
+  transform: scale(1.12);
+  filter: grayscale(100%) contrast(140%) brightness(68%) blur(1.2px);
+}
+
+.suction{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:0;
+  transition: opacity .15s ease;
+  z-index:4;
+}
+body.isSucking .suction{ opacity:1; }
+
+/* 링: 회전 없이 “수축”만 → 빨려들어가는 착시 */
+.suction::before{
+  content:"";
+  position:absolute;
+  inset:-30%;
+  transform-origin: var(--sx) var(--sy);
+  background:
+    repeating-radial-gradient(circle at var(--sx) var(--sy),
+      rgba(255,255,255,.22) 0 1px,
+      rgba(255,255,255,0) 2px 14px);
+  mix-blend-mode: screen;
+  filter: blur(.6px);
+  animation: suckPulse .55s ease-in-out infinite;
+}
+
+@keyframes suckPulse{
+  0%   { transform: scale(1.12); opacity:.40; }
+  55%  { transform: scale(0.92); opacity:.18; }
+  100% { transform: scale(0.86); opacity:0; }
+}
+
+/* click: 한 번 더 강하게 */
+.frame{
+  transform-origin: var(--sx) var(--sy);
+  will-change: transform, filter;
+}
+body.isEntering .bg{
+  transform: scale(1.18);
+  filter: grayscale(100%) contrast(155%) brightness(60%) blur(2px);
+}
+.frame.isEntering{
+  transform: scale(.985);
+  filter: blur(1px) brightness(.9);
+  transition: transform .45s ease, filter .45s ease;
+}
+body.isEntering .suction::before{
+  animation: suckInOnce .45s ease forwards;
+}
+@keyframes suckInOnce{
+  0%   { transform: scale(1.20); opacity:.55; }
+  100% { transform: scale(0.78); opacity:0; }
+}
+.tv{ z-index: 20; }
+.title{ pointer-events:none; }
+.suction{ pointer-events:none; }
+

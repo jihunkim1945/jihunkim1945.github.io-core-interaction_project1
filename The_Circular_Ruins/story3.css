@@ -1,0 +1,168 @@
+@font-face{
+  font-family: "Whyte";
+  src: url("../assets/font/ABCWhyteMonoInktrapVariable-Trial.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+:root{ --ease: cubic-bezier(.2,.8,.2,1); }
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+  margin:0; overflow:hidden; background:#000;
+  font-family:"Whyte", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+svg#filters{ position:absolute; width:0; height:0; pointer-events:none; }
+
+.app{ position:relative; width:100vw; height:100vh; isolation:isolate; }
+
+/* bg */
+.bg{ position:absolute; inset:0; overflow:hidden; z-index:0; }
+.bg img{
+  position:absolute; inset:-2%;
+  width:104%; height:104%;
+  object-fit:cover;
+  transform: translate3d(var(--bgx,0px), var(--bgy,0px), 0) scale(var(--bgs,1.03));
+  filter: url(#dreamDisplace);
+  will-change: transform, filter;
+}
+
+/* light noise */
+.noise{
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+  opacity:.12; mix-blend-mode: screen;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(255,255,255,.06) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.05) 0 1px, transparent 1px 4px);
+  filter: contrast(120%) brightness(110%);
+  animation: noiseJitter 1.6s steps(2,end) infinite;
+}
+@keyframes noiseJitter{
+  0%{ transform: translate3d(0,0,0); }
+  25%{ transform: translate3d(-5px,3px,0); }
+  50%{ transform: translate3d(4px,-4px,0); }
+  75%{ transform: translate3d(-3px,-5px,0); }
+  100%{ transform: translate3d(0,0,0); }
+}
+
+/* hotspot (작게 + 랜덤) */
+.hotspot{
+  position:absolute;
+  left: var(--hx, 35%);
+  top:  var(--hy, 35%);
+  width: var(--hw, 18%);
+  height: var(--hh, 16%);
+  z-index:3;
+  cursor: help;
+  /* debug:
+  outline:1px dashed rgba(255,255,255,.25);
+  */
+}
+
+/* stage */
+/* stage */
+.stage{
+  position:absolute; inset:0;
+  z-index:4;
+  pointer-events:none;
+}
+
+/* ✅ reader: 호버 위치로 이동 (CSS 변수로 제어) */
+.reader{
+  position:absolute;
+  left: var(--bx, 50vw);
+  top:  var(--by, 50vh);
+  transform: translate(-50%, -50%);
+  width: min(900px, 92vw);
+  height: min(560px, 72vh);
+  pointer-events:none;
+  overflow: hidden; /* 카드 커져도 삐죽 안 튐 */
+}
+
+.stack{
+  position:absolute; inset:0;
+  display:grid;
+  place-items:center;
+}
+
+/* ✅ 카드: 블러 없음 + 같은 위치 */
+.card{
+  position:absolute;
+  width: min(640px, 86%);
+  height: min(380px, 70%);
+  border-radius:0;
+  background: rgba(245,243,239,.96);
+  border: 1px solid rgba(0,0,0,.18);
+  box-shadow: 0 28px 90px rgba(0,0,0,.34);
+  overflow:auto;
+
+  padding: 18px 18px 22px;
+  color: rgba(0,0,0,.92);
+  line-height: 1.55;
+  font-size: 14px;
+
+  /* ✅ reveal only (중앙 원처럼 열림) */
+  /* ✅ 네모 reveal */
+clip-path: inset(var(--inset, 50%) round 0px);
+filter: none !important; /* ✅ 블러 금지 */
+
+  /* ✅ 스크롤 진행에 따라 JS가 조절 */
+  opacity: var(--o, 0);
+  transform: translate3d(0,0,0) scale(var(--s, .94));
+  filter: none !important; /* ✅ 블러 완전 제거 */
+  will-change: clip-path, transform, opacity;
+}
+
+
+/* Door */
+.wakeDoor{
+  position:absolute;
+  left: var(--dx, 84vw);
+  top:  var(--dy, 78vh);
+  z-index: 6;
+  background:none; border:none; box-shadow:none;
+  overflow:visible; display:block;
+}
+.wakeDoor img{
+  width: var(--ds, 36px);
+  height:auto;
+  display:block;
+  opacity:.85;
+  transition: transform .15s ease;
+}
+.wakeDoor:hover img{ animation: doorShake .35s ease-in-out infinite; }
+@keyframes doorShake{
+  0%{ transform: translate(0,0) rotate(0deg); }
+  25%{ transform: translate(-1px,1px) rotate(-1deg); }
+  50%{ transform: translate(1px,-1px) rotate(1deg); }
+  75%{ transform: translate(-1px,0) rotate(-0.5deg); }
+  100%{ transform: translate(0,0) rotate(0deg); }
+}
+
+/* ✅ gif 전환 오버레이 (물방울/젤) */
+.wipe{
+  position:absolute; inset:-10%;
+  z-index:5;
+  pointer-events:none;
+  opacity:0;
+  transform: scale(1.04);
+  filter: blur(1px) contrast(120%) saturate(110%);
+  mix-blend-mode: screen;
+
+  background:
+    radial-gradient(circle at 50% 55%, rgba(0,0,0,0) 0 30%, rgba(0,0,0,.88) 72%, rgba(0,0,0,1) 85%),
+    url("../assets/images/liquid.gif");
+  background-size: cover;
+  background-position: center;
+}
+
+.wipe.play{
+  animation: wipeFx 1.9s var(--ease) both;
+}
+
+@keyframes wipeFx{
+  0%{ opacity:0; transform: scale(1.06); filter: blur(6px) contrast(110%); }
+  25%{ opacity:1; transform: scale(1.02); filter: blur(2px) contrast(135%); }
+  75%{ opacity:.95; transform: scale(1.04); filter: blur(3px) contrast(125%); }
+  100%{ opacity:0; transform: scale(1.08); filter: blur(10px) contrast(110%); }
+}
