@@ -27,7 +27,7 @@ body{
   position:fixed;
   inset:0;
   z-index:-1;
-  background: url("../assets/images/Dark-room.jpeg") center/cover no-repeat;
+  background: url("./assets/images/Dark-room.jpeg") center/cover no-repeat;
   filter: grayscale(100%) contrast(120%) brightness(78%);
 }
 
