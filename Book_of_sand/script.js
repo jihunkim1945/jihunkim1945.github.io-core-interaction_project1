@@ -1,7 +1,7 @@
 /**********************
 CONFIG
 **********************/
-const HOME_URL = "../home/index.html";
+const HOME_URL = "../index.html";
 
 const BG_COLORS = [
   "#ff0000",
